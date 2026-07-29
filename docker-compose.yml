@@ -1,0 +1,124 @@
+# ============================================
+# Docker Compose
+# ============================================
+# Full-stack development environment:
+#   - Client  (Nuxt 4)        → :3000
+#   - Server  (Fastify)       → :8000
+#   - Postgres 18             → :5432
+#   - Redis 8                 → :6379
+# ============================================
+
+services:
+  # PostgreSQL 
+  postgres:
+    image: postgres:18-alpine
+    container_name: nextgen-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nextgen}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nextgen_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-nextgen_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nextgen} -d ${POSTGRES_DB:-nextgen_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - nextgen-network
+
+  # Redis 
+  redis:
+    image: redis:8.0-alpine
+    container_name: nextgen-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - nextgen-network
+
+  # Backend (Fastify) 
+  server:
+    build:
+      context: .
+      dockerfile: docker/server.Dockerfile
+      target: development
+    container_name: nextgen-server
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 8000
+      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextgen}:${POSTGRES_PASSWORD:-nextgen_secret}@postgres:5432/${POSTGRES_DB:-nextgen_db}
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./server:/app/server
+      - server_node_modules:/app/server/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - nextgen-network
+
+  # Frontend (Nuxt 4) 
+  client:
+    build:
+      context: .
+      dockerfile: docker/client.Dockerfile
+      target: development
+    container_name: nextgen-client
+    restart: unless-stopped
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    environment:
+      NUXT_PUBLIC_API_BASE: http://server:8000/api/v1
+    volumes:
+      - ./client:/app/client
+      - client_node_modules:/app/client/node_modules
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    networks:
+      - nextgen-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  server_node_modules:
+    driver: local
+  client_node_modules:
+    driver: local
+
+networks:
+  nextgen-network:
+    driver: bridge

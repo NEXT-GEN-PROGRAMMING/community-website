@@ -1,0 +1,136 @@
+# ============================================
+# Validates that all Docker images build successfully
+# and docker-compose stack can start up.
+# ============================================
+
+name: Docker
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "docker/**"
+      - "docker-compose.yml"
+      - "client/**"
+      - "server/**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "docker/**"
+      - "docker-compose.yml"
+      - "client/**"
+      - "server/**"
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-client:
+    name: "Docker → Build Client"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build client image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/client.Dockerfile
+          push: false
+          tags: nextgen-client:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-server:
+    name: "Docker → Build Server"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build server image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/server.Dockerfile
+          push: false
+          tags: nextgen-server:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  compose-up:
+    name: "Docker → Compose Up"
+    runs-on: ubuntu-latest
+    needs: [build-client, build-server]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Create .env file
+        run: |
+          cp .env.example .env
+
+      - name: Build and start all services
+        run: |
+          docker compose up -d --build --wait --wait-timeout 120
+
+      - name: Verify all containers are healthy
+        run: |
+          echo "=== Container Status ==="
+          docker compose ps
+
+          # Check each service is running
+          for service in client server postgres redis; do
+            status=$(docker compose ps --format json $service | jq -r '.[0].State // .State // "missing"' 2>/dev/null || echo "missing")
+            if [[ "$status" != "running" ]]; then
+              echo "[!!!] Service '$service' is not running (status: $status)"
+              docker compose logs $service --tail=50
+              exit 1
+            fi
+            echo "[OK] $service is running"
+          done
+
+      - name: Health check — Server API
+        run: |
+          # Wait for server to be ready, then hit health endpoint
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/api/v1/health > /dev/null 2>&1; then
+              echo "[OK] Server health check passed"
+              exit 0
+            fi
+            echo "Waiting for server... (attempt $i/30)"
+            sleep 2
+          done
+          echo "[!!!] Server health check failed after 60s"
+          docker compose logs server --tail=100
+          exit 1
+
+      - name: Health check — Client
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 > /dev/null 2>&1; then
+              echo "[OK] Client health check passed"
+              exit 0
+            fi
+            echo "Waiting for client... (attempt $i/30)"
+            sleep 2
+          done
+          echo "[!!!] Client health check failed after 60s"
+          docker compose logs client --tail=100
+          exit 1
+
+      - name: Print logs on failure
+        if: failure()
+        run: docker compose logs --tail=200
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v --remove-orphans
