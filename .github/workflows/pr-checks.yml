@@ -28,7 +28,7 @@ jobs:
           # Conventional Commits pattern:
           #   type(scope): description
           #   type: description
-          PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|revert)(\(.+\))?: .{3,}"
+          PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|revert)(\((client|server|db|docker|deps|config)\))?: .{3,}"
 
           if [[ ! "$TITLE" =~ $PATTERN ]]; then
             echo "[!!!] PR title does not follow Conventional Commits format."
@@ -54,11 +54,6 @@ jobs:
     name: "PR → Size Check"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
       - name: Check PR size
         run: |
           # Get the diff stats
@@ -81,7 +76,7 @@ jobs:
           elif [[ $TOTAL -gt 500 ]]; then
             echo "[NOTE]: This PR has $TOTAL lines changed. Keep PRs focused when possible."
           else
-            echo "[OK]PR size looks good."
+            echo "[OK] PR size looks good."
           fi
         env:
           GH_TOKEN: ${{ github.token }}
