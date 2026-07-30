@@ -46,10 +46,15 @@ jobs:
           docker compose ps
 
           for service in client server postgres redis; do
-            health=$(docker compose ps --format json $service | jq -r '.[0].Health // .Health // "none"' 2>/dev/null || echo "none")
+            cid=$(docker compose ps -q "$service")
+            if [[ -z "$cid" ]]; then
+              echo "[!!!] Service '$service' has no running container"
+              exit 1
+            fi
+            health=$(docker inspect --format='{{.State.Health.Status}}' "$cid" 2>/dev/null || echo "none")
             if [[ "$health" != "healthy" ]]; then
               echo "[!!!] Service '$service' is not healthy (status: $health)"
-              docker compose logs $service --tail=50
+              docker compose logs "$service" --tail=50
               exit 1
             fi
             echo "[OK] $service is healthy"
