@@ -64,12 +64,24 @@ git remote add upstream https://github.com/nextgen-programmers/website.git
 # 4. Copy environment variables
 cp .env.example .env
 
-# 5. Start with Docker (recommended)
+# Method 1: Automated Docker Setup (Easy Onboarding)
 docker compose up --build
+# That's it! Docker handles everything automatically.
 
-# OR start manually
-cd client && pnpm install && pnpm dev
-cd server && pnpm install && pnpm prisma generate && pnpm dev
+# Method 2: Native Setup (Maximum Control)
+docker compose up postgres redis -d # Start databases
+
+# Terminal 1 (Backend)
+cd server
+cp .env.example .env
+pnpm install
+pnpm prisma db push
+pnpm dev
+
+# Terminal 2 (Frontend)
+cd ../client
+pnpm install
+pnpm dev
 ```
 
 ---

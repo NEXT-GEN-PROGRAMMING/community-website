@@ -42,18 +42,17 @@ The website is designed to be **modern, interactive, and developer-focused** whi
 
 | Technology | Purpose |
 |---|---|
-| [Fastify](https://fastify.dev) | High-performance Node.js web framework |
+| [Fastify v5](https://fastify.dev) | High-performance Node.js web framework |
 | [TypeScript](https://typescriptlang.org) | Type safety for the API layer |
-| [Prisma](https://prisma.io) | Type-safe ORM with auto-generated client and migrations |
-| [PostgreSQL](https://postgresql.org) | Primary relational database |
-| [Redis](https://redis.io) | Caching, sessions, and rate limiting |
+| [Prisma v7](https://prisma.io) | Type-safe ORM using native JS driver-adapter |
+| [PostgreSQL 18](https://postgresql.org) | Primary relational database |
+| [Redis 8](https://redis.io) | Caching, sessions, and rate limiting |
 
 ### Infrastructure
 
 | Technology | Purpose |
 |---|---|
-| [Docker](https://docker.com) | Containerization for all services |
-| [Docker Compose](https://docs.docker.com/compose) | Multi-container orchestration (app + Postgres + Redis) |
+| [Docker Compose](https://docs.docker.com/compose) | Local database orchestration (Postgres + Redis) |
 
 ---
 
@@ -120,55 +119,64 @@ NEXTGEN/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org) >= 20.x
-- [pnpm](https://pnpm.io) (recommended) or npm
-- [Docker](https://docker.com) & [Docker Compose](https://docs.docker.com/compose)
+- [Node.js](https://nodejs.org) >= 26.x
+- [pnpm](https://pnpm.io) >= 11.x (required)
+- [Docker Compose](https://docs.docker.com/compose) (for databases)
 
-### Quick Start (Docker — Recommended)
+### Method 1: Automated Setup (Docker — Recommended)
+
+With this method, Docker will automatically download Node, install all frameworks, synchronize the database schema, and hot-reload your code.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/nextgen-programmers/website.git
+git clone https://github.com/NEXT-GEN-PROGRAMMING/community-website
 cd website
 
-# 2. Copy environment variables
-cp .env.example .env
-
-# 3. Start everything with Docker Compose
+# 2. Start the entire full-stack environment
 docker compose up --build
 
+# Wait a minute for the automated installations to finish!
 # Frontend:  http://localhost:3000
 # Backend:   http://localhost:8000
-# Postgres:  localhost:5432
-# Redis:     localhost:6379
 ```
 
-### Manual Setup (Without Docker)
+### Method 2: Manual Setup (Local — Recommended for Core Contributors)
+
+With this method, Docker is only used for the databases, giving you maximum native performance and control over your frontend/backend servers.
 
 ```bash
-# Frontend
+# 1. Clone the repository
+git clone https://github.com/NEXT-GEN-PROGRAMMING/community-website
+cd website
+
+# 2. Boot up the local databases (Postgres 18 & Redis 8)
+docker compose up postgres redis -d
+
+# 3. Setup and start Backend (in Terminal 1)
+cd server
+cp .env.example .env
+pnpm install
+pnpm prisma db push # Automatically pushes schema and generates client
+pnpm dev             # → http://localhost:8000
+
+# 4. Setup and start Frontend (in Terminal 2)
 cd client
 pnpm install
 pnpm dev             # → http://localhost:3000
-
-# Backend (in a separate terminal)
-cd server
-pnpm install
-pnpm prisma generate # Generate Prisma client
-pnpm prisma migrate dev # Run database migrations
-pnpm dev             # → http://localhost:8000
 ```
 
 ---
 
 ## 🐳 Docker Services
 
+We use Docker to manage the environments. You can either run the entire stack via Docker (Method 1) or just the databases (Method 2).
+
 | Service | Image | Port | Description |
 |---|---|---|---|
-| `client` | Custom (Nuxt) | `3000` | Frontend application |
-| `server` | Custom (Fastify) | `8000` | Backend API |
-| `postgres` | `postgres:16-alpine` | `5432` | PostgreSQL database |
-| `redis` | `redis:7-alpine` | `6379` | Redis cache |
+| `client` | `node:26-alpine` | `3000` | Frontend application (Hot-reloads code from `./client`) |
+| `server` | `node:26-alpine` | `8000` | Backend API (Hot-reloads code from `./server`) |
+| `postgres` | `postgres:18-alpine` | `5432` | PostgreSQL database |
+| `redis` | `redis:8.0-alpine` | `6379` | Redis cache |
 
 ---
 
