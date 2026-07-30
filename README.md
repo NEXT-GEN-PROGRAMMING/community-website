@@ -1,5 +1,9 @@
 # NEXT-GEN Programmers — Community Website
 
+[![Docker CI](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/docker.yml/badge.svg)](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/ci.yml)
+[![Docker CI](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/docker.yml/badge.svg)](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/docker.yml)
+[![PR Checks](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/NEXT-GEN-PROGRAMMING/community-website/actions/workflows/pr-checks.yml)
+
 > [!WARNING] 
 > **Legacy Code — Draft v0.1**
 > This is the initial commit and foundational draft of the NEXT-GEN Programmers website. Everything here is a starting point. Contributors and participants are free — and encouraged — to improve, refactor, and expand upon this codebase.

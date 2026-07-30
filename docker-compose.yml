@@ -1,3 +1,5 @@
+# Full stack orchestration for local development.
+# See README.md "Docker Services" section for details on each service.
 services:
   client:
     image: node:26-alpine
