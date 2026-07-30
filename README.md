@@ -194,21 +194,32 @@ We use Docker to manage the environments. You can either run the entire stack vi
 Copy `.env.example` to `.env` and fill in the values:
 
 ```env
-# Database
-DATABASE_URL=postgresql://nextgen:nextgen@localhost:5432/nextgen_db
+# Database (PostgreSQL)
+POSTGRES_USER=nextgen
+POSTGRES_PASSWORD=nextgen_secret
+POSTGRES_DB=nextgen_db
+DATABASE_URL=postgresql://nextgen:nextgen_secret@localhost:5432/nextgen_db?schema=public
 
 # Redis
 REDIS_URL=redis://localhost:6379
 
-# Server
+# Server (Fastify)
 PORT=8000
+HOST=0.0.0.0
 NODE_ENV=development
+API_PREFIX=/api/v1
 
-# Client
-NUXT_PUBLIC_API_BASE=http://localhost:8000
+# Client (Nuxt)
+NUXT_PUBLIC_API_BASE=http://localhost:8000/api/v1
 
-# Discord (future integration)
-DISCORD_INVITE_URL=https://discord.gg/nextgen
+# Discord
+DISCORD_INVITE_URL=https://discord.gg/knwK9ZtpDP
+# DISCORD_BOT_TOKEN=         # Future: for live stats integration
+# DISCORD_GUILD_ID=          # Future: for live stats integration
+
+# Auth 
+# JWT_SECRET=your-secret-key-here
+# JWT_EXPIRES_IN=7d
 ```
 
 ---
@@ -218,7 +229,7 @@ DISCORD_INVITE_URL=https://discord.gg/nextgen
 We welcome contributions from everyone! Please read our **[Contributing Guide](CONTRIBUTING.md)** before submitting pull requests.
 
 **Quick summary:**
-- Fork → Branch → Code → Test → PR
+- Fork → Branch → Code → Test → Open Issue → PR → Link PR to Issue
 - All PRs must pass CI tests
 - Follow the commit convention
 - Be respectful and constructive
