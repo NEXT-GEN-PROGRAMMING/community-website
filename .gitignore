@@ -74,3 +74,5 @@ server/prisma/*.db-journal
 # ============================================
 *.tgz
 *.tsbuildinfo
+
+scripts/

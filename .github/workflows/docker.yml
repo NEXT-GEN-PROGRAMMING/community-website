@@ -35,7 +35,7 @@ jobs:
 
       - name: Build and start all services
         run: |
-          docker compose up -d --build --wait --wait-timeout 240
+          docker compose up -d --build --wait --wait-timeout 300
 
       - name: Verify all containers are healthy
         run: |

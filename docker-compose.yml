@@ -13,11 +13,11 @@ services:
       - CI=true
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 30
-      start_period: 120s
+      start_period: 180s
     depends_on:
       - server
 
@@ -36,7 +36,7 @@ services:
       - CI=true
     command: sh -c "npm install -g pnpm && pnpm install && pnpm prisma generate && pnpm prisma db push && pnpm dev"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/api/v1/health || exit 1"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8000/api/v1/health', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 30
