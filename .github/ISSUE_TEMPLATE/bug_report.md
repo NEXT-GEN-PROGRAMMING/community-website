@@ -1,11 +1,14 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
+title: 'bug: '
+labels: 'bug, triage'
 assignees: ''
 
 ---
+
+- [ ] I have searched the existing issues and found no duplicate for this bug report.
+- [ ] I have read the `CONTRIBUTING.md` guide.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -20,19 +23,15 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Environment (please complete the following information):**
+ - OS: [e.g. Windows 11, macOS, Ubuntu]
+ - Node.js version: [e.g. v26.0.0]
+ - pnpm version: [e.g. v11.17.0]
+ - Using Docker? [e.g. Yes (Method 1) or No (Method 2)]
+ - Browser (if frontend issue): [e.g. Chrome, Safari]
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Screenshots / Logs**
+If applicable, add screenshots or terminal logs to help explain your problem. (Please use code blocks for logs).
 
 **Additional context**
 Add any other context about the problem here.

@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "weekly"
+    groups:
+      nuxt-ui:
+        patterns:
+          - "@nuxt/ui"
+          - "nuxt"
+          - "tailwindcss"
+
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
+    groups:
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+
+  # Maintain Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
