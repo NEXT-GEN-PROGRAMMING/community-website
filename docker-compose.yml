@@ -13,11 +13,11 @@ services:
       - CI=true
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
-      interval: 5s
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 40
-      start_period: 90s
+      retries: 30
+      start_period: 120s
     depends_on:
       - server
 
@@ -34,13 +34,13 @@ services:
       - DATABASE_URL=postgresql://nextgen:nextgen_secret@postgres:5432/nextgen_db?schema=public
       - REDIS_URL=redis://redis:6379
       - CI=true
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm prisma db push && pnpm dev"
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm prisma generate && pnpm prisma db push && pnpm dev"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/v1/health"]
-      interval: 5s
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/api/v1/health || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 40
-      start_period: 90s
+      retries: 30
+      start_period: 120s
     depends_on:
       postgres:
         condition: service_healthy

@@ -92,6 +92,11 @@ NEXTGEN/
 │   ├── client.Dockerfile    # Frontend container
 │   ├── server.Dockerfile    # Backend container
 │   └── redis.conf           # Redis configuration (optional)
+│   > **Note:** Not currently wired up. `docker-compose.yml` runs `client`
+│   > and `server` directly from the `node:26-alpine` image with source
+│   > mounted as a volume, rather than building from these Dockerfiles.
+│   > This folder is reserved for a future production-style multi-stage
+│   > build; it's not required for local development via Docker Compose.
 │
 ├── docker-compose.yml       # Full stack orchestration
 ├── .env.example             # Environment variable template
