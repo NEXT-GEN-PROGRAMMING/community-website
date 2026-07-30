@@ -86,3 +86,5 @@ volumes:
   redis_data:
   client_node_modules:
   server_node_modules:
+
+# CI verification test
