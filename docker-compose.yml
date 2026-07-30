@@ -12,6 +12,12 @@ services:
       - NUXT_PUBLIC_API_BASE=http://localhost:8000
       - CI=true
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev --host"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 90s
     depends_on:
       - server
 
@@ -29,6 +35,12 @@ services:
       - REDIS_URL=redis://redis:6379
       - CI=true
     command: sh -c "npm install -g pnpm && pnpm install && pnpm prisma db push && pnpm dev"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/v1/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 90s
     depends_on:
       postgres:
         condition: service_healthy

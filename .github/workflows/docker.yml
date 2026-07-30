@@ -35,52 +35,27 @@ jobs:
 
       - name: Build and start all services
         run: |
-          docker compose up -d --build --wait --wait-timeout 120
+          docker compose up -d --build --wait --wait-timeout 240
 
       - name: Verify all containers are healthy
         run: |
+          # docker compose up --wait already blocked until every service's
+          # healthcheck passed (client/server/postgres/redis all define one),
+          # so this is just a final confirmation + status printout.
           echo "=== Container Status ==="
           docker compose ps
 
-          # Check each service is running
           for service in client server postgres redis; do
-            status=$(docker compose ps --format json $service | jq -r '.[0].State // .State // "missing"' 2>/dev/null || echo "missing")
-            if [[ "$status" != "running" ]]; then
-              echo "[!!!] Service '$service' is not running (status: $status)"
+            health=$(docker compose ps --format json $service | jq -r '.[0].Health // .Health // "none"' 2>/dev/null || echo "none")
+            if [[ "$health" != "healthy" ]]; then
+              echo "[!!!] Service '$service' is not healthy (status: $health)"
               docker compose logs $service --tail=50
               exit 1
             fi
-            echo "[OK] $service is running"
+            echo "[OK] $service is healthy"
           done
 
-      - name: Health check — Server API
-        run: |
-          # Wait for server to be ready, then hit health endpoint
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8000/api/v1/users > /dev/null 2>&1; then
-              echo "[OK] Server health check passed"
-              exit 0
-            fi
-            echo "Waiting for server... (attempt $i/30)"
-            sleep 2
-          done
-          echo "[!!!] Server health check failed after 60s"
-          docker compose logs server --tail=100
-          exit 1
-
-      - name: Health check — Client
-        run: |
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:3000 > /dev/null 2>&1; then
-              echo "[OK] Client health check passed"
-              exit 0
-            fi
-            echo "Waiting for client... (attempt $i/30)"
-            sleep 2
-          done
-          echo "[!!!] Client health check failed after 60s"
-          docker compose logs client --tail=100
-          exit 1
+          echo "[OK] Server reachable at http://localhost:8000, client at http://localhost:3000"
 
       - name: Print logs on failure
         if: failure()
