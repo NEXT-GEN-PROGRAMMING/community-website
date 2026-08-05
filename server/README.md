@@ -58,8 +58,17 @@ Run ESLint to check for code issues:
 pnpm lint
 ```
 
-Run tests with Vitest:
+### Testing with Vitest
+
+We use **Vitest** for testing our backend routes and services.
 
 ```bash
+# Run all tests
 pnpm test
+
+# Run tests in watch mode (recommended for development)
+pnpm vitest
+
+# Run tests with coverage
+pnpm vitest run --coverage
 ```

@@ -43,8 +43,8 @@ Ensure you have the following installed:
 
 | Tool | Version | Purpose |
 |---|---|---|
-| [Node.js](https://nodejs.org) | >= 20.x | JavaScript runtime |
-| [pnpm](https://pnpm.io) | >= 10.x | Package manager (preferred) |
+| [Node.js](https://nodejs.org) | >= 26.x | JavaScript runtime |
+| [pnpm](https://pnpm.io) | >= 11.x | Package manager (preferred) |
 | [Docker](https://docker.com) | Latest | Container runtime |
 | [Docker Compose](https://docs.docker.com/compose) | v2+ | Multi-container orchestration |
 | [Git](https://git-scm.com) | Latest | Version control |
@@ -56,7 +56,7 @@ Ensure you have the following installed:
 
 # 2. Clone your fork
 git clone https://github.com/<your-username>/website.git
-cd website
+cd community-website
 
 # 3. Add upstream remote
 git remote add upstream https://github.com/nextgen-programmers/website.git
@@ -72,9 +72,11 @@ docker compose up --build
 docker compose up postgres redis -d # Start databases
 
 # Terminal 1 (Backend)
-cd server
+cd ../server
 cp .env.example .env
 pnpm install
+pnpm prisma generate
+ls src/generated/prisma # Check if src/generated/prisma/client.ts exists
 pnpm prisma db push
 pnpm dev
 
@@ -335,13 +337,13 @@ Before | After
 pnpm test
 
 # Run with coverage
-pnpm test:coverage
+pnpm vitest run --coverage
 
 # Run specific test file
-pnpm test -- path/to/test.spec.ts
+pnpm vitest path/to/test.spec.ts
 
 # Watch mode during development
-pnpm test:watch
+pnpm vitest
 ```
 
 ### Test File Naming

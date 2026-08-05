@@ -139,7 +139,7 @@ With this method, Docker will automatically download Node, install all framework
 ```bash
 # 1. Clone the repository
 git clone https://github.com/NEXT-GEN-PROGRAMMING/community-website
-cd website
+cd community-website
 
 # 2. Start the entire full-stack environment
 docker compose up --build
@@ -156,7 +156,7 @@ With this method, Docker is only used for the databases, giving you maximum nati
 ```bash
 # 1. Clone the repository
 git clone https://github.com/NEXT-GEN-PROGRAMMING/community-website
-cd website
+cd community-website
 
 # 2. Boot up the local databases (Postgres 18 & Redis 8)
 docker compose up postgres redis -d
@@ -165,6 +165,8 @@ docker compose up postgres redis -d
 cd server
 cp .env.example .env
 pnpm install
+pnpm prisma generate
+ls src/generated/prisma # Check if src/generated/prisma/client.ts exists
 pnpm prisma db push # Automatically pushes schema and generates client
 pnpm dev             # → http://localhost:8000
 
