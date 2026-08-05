@@ -233,7 +233,7 @@ We welcome contributions from everyone! Please read our **[Contributing Guide](C
 
 **Quick summary:**
 - Fork → Branch → Code → Test → Open Issue → PR → Link PR to Issue
-- All PRs must pass CI tests
+- All PRs must pass CI tests (lint, typecheck, unit tests)
 - Follow the commit convention
 - Be respectful and constructive
 

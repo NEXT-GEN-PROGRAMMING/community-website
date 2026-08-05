@@ -96,8 +96,9 @@ pnpm dev
 2. Create a branch       →  git checkout -b feat/my-feature
 3. Make changes          →  Write code, add tests
 4. Run linter            →  pnpm lint
-5. Run tests             →  pnpm test
-6. Commit (conventional) →  git commit -m "feat: add member search"
+5. Run typecheck         →  pnpm typecheck
+6. Run tests             →  pnpm test
+7. Commit (conventional) →  git commit -m "feat: add member search"
 7. Push                  →  git push origin feat/my-feature
 8. Open an Issue         →  write about the changes to be done or changes made  
 9. Open a Pull Request   →  Target the `main` branch
@@ -212,6 +213,7 @@ git commit -m "asdfasdf"
 - [ ] Your branch is up to date with `main`
 - [ ] Code compiles without errors (`pnpm build`)
 - [ ] Linter passes with no warnings (`pnpm lint`)
+- [ ] TypeScript compiles with no errors (`pnpm typecheck`)
 - [ ] **All existing tests pass** (`pnpm test`)
 - [ ] New features include corresponding tests
 - [ ] You've tested your changes locally
@@ -262,7 +264,7 @@ Before | After
 ### Review Process
 
 1. At least **1 approval** is required to merge
-2. All CI checks must be **green** (lint, tests, build)
+2. All CI checks must be **green** (lint, typecheck, tests, build)
 3. No unresolved review comments
 4. Branch must be up to date with `main`
 5. Squash merge is preferred for clean history

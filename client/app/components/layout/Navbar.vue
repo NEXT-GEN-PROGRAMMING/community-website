@@ -64,8 +64,8 @@ const links = [
 const isScrolled = ref(false)
 const isHovered = ref(false)
 const activeSection = ref('home')
-let hoverTimeout
-let observer
+const hoverTimeout = ref()
+const observer = ref()
 
 const handleScroll = () => {
   // Minimize when scrolled down more than 50px
@@ -73,13 +73,13 @@ const handleScroll = () => {
 }
 
 const handleMouseEnter = () => {
-  clearTimeout(hoverTimeout)
+  clearTimeout(hoverTimeout.value)
   isHovered.value = true
 }
 
 const handleMouseLeave = () => {
   // 300ms debounce matches the CSS transition time to prevent flickering
-  hoverTimeout = setTimeout(() => {
+  hoverTimeout.value = setTimeout(() => {
     isHovered.value = false
   }, 300)
 }
@@ -94,7 +94,7 @@ onMounted(() => {
     threshold: 0
   }
   
-  observer = new IntersectionObserver((entries) => {
+  observer.value = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         activeSection.value = entry.target.id
@@ -106,14 +106,14 @@ onMounted(() => {
   setTimeout(() => {
     links.forEach(link => {
       const el = document.getElementById(link.id)
-      if (el) observer?.observe(el)
+      if (el) observer.value?.observe(el)
     })
   }, 300)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-  if (observer) observer.disconnect()
+  if (observer.value) observer.value.disconnect()
 })
 </script>
 

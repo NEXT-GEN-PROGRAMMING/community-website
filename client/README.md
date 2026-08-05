@@ -50,6 +50,12 @@ Run ESLint to check for code issues:
 pnpm lint
 ```
 
+Check for TypeScript type errors:
+
+```bash
+pnpm typecheck
+```
+
 ### Testing with Vitest
 
 We use **Vitest** for testing our frontend components and logic.
