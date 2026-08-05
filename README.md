@@ -163,7 +163,7 @@ docker compose up postgres redis -d
 
 # 3. Setup and start Backend (in Terminal 1)
 cd server
-cp .env.example .env
+cp ../.env.example .env
 pnpm install
 pnpm prisma generate
 ls src/generated/prisma # Check if src/generated/prisma/client.ts exists
@@ -172,6 +172,7 @@ pnpm dev             # → http://localhost:8000
 
 # 4. Setup and start Frontend (in Terminal 2)
 cd client
+cp ../.env.example .env
 pnpm install
 pnpm dev             # → http://localhost:3000
 ```

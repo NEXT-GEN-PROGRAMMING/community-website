@@ -72,8 +72,8 @@ docker compose up --build
 docker compose up postgres redis -d # Start databases
 
 # Terminal 1 (Backend)
-cd ../server
-cp .env.example .env
+cd server
+cp ../.env.example .env
 pnpm install
 pnpm prisma generate
 ls src/generated/prisma # Check if src/generated/prisma/client.ts exists
@@ -81,7 +81,8 @@ pnpm prisma db push
 pnpm dev
 
 # Terminal 2 (Frontend)
-cd ../client
+cd client
+cp ../.env.example .env
 pnpm install
 pnpm dev
 ```
