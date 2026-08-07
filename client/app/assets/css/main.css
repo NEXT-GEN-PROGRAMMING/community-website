@@ -2,15 +2,156 @@
 @import "@nuxt/ui";
 
 @theme {
-  --color-primary-50: #f0fdfa;
-  --color-primary-100: #ccfbf1;
-  --color-primary-200: #99f6e4;
-  --color-primary-300: #5eead4;
-  --color-primary-400: #2dd4bf;
-  --color-primary-500: #14b8a6;
-  --color-primary-600: #0d9488;
-  --color-primary-700: #0f766e;
-  --color-primary-800: #115e59;
-  --color-primary-900: #134e4a;
-  --color-primary-950: #042f2e;
+  /* Brand: Nike Red primary */
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe1e3;
+  --color-primary-200: #ffc2c8;
+  --color-primary-300: #ff939d;
+  --color-primary-400: #ff5c77;
+  --color-primary-500: #e4002b;
+  --color-primary-600: #c20024;
+  --color-primary-700: #9e001e;
+  --color-primary-800: #7d0019;
+  --color-primary-900: #4d0711;
+  --color-primary-950: #2d030a;
+
+  /* Surfaces — near-black, no pure #000 */
+  --color-ink: #09090b;
+  --color-ink-soft: #0e0e11;
+  --color-surface: #121216;
+  --color-raised: #1a1a20;
+
+  /* Hairlines & text */
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-fog: #9ca3af;
+
+  --font-jetbrains: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-zinc-300 font-jetbrains antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-primary-500);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    border: 2px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* JetBrains Mono — self-hosted, one global @font-face block           */
+/* (keeps the named faces the original markup relies on too)           */
+/* ------------------------------------------------------------------ */
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-ExtraLight.ttf') format('truetype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-ExtraBold.ttf') format('truetype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-ThinItalic.ttf') format('truetype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-ExtraLightItalic.ttf') format('truetype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-Italic.ttf') format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-MediumItalic.ttf') format('truetype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-SemiBoldItalic.ttf') format('truetype'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-BoldItalic.ttf') format('truetype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('~/assets/fonts/JetBrainsMono-ExtraBoldItalic.ttf') format('truetype'); font-weight: 800; font-style: italic; font-display: swap; }
+
+/* Named faces — legacy markup references these directly */
+@font-face { font-family: 'JetBrains Mono ExtraBold'; src: url('~/assets/fonts/JetBrainsMono-ExtraBold.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono Light'; src: url('~/assets/fonts/JetBrainsMono-Light.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono Regular'; src: url('~/assets/fonts/JetBrainsMono-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono SemiBold Italic'; src: url('~/assets/fonts/JetBrainsMono-SemiBoldItalic.ttf') format('truetype'); font-weight: 600; font-style: italic; font-display: swap; }
+
+/* ------------------------------------------------------------------ */
+/* Scroll-reveal utilities — global so any component can use them      */
+/* Hidden only when motion is allowed; reduced-motion users get static */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on-scroll {
+    opacity: 0;
+  }
+  .reveal-fade-up {
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .reveal-pop-in {
+    transform: scale(0.88);
+    transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .reveal-on-scroll.revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hide scrollbars for horizontal carousels */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Subtle film-grain overlay (Linear-style texture). Applied on a fixed,
+   pointer-events-none layer only — never on scrolling containers. */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-reduced-motion: no-preference) {
+  .grain::before {
+    animation: grain-shift 8s steps(6) infinite;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain::before {
+    animation: none;
+  }
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2%, 1%); }
+  40% { transform: translate(1%, -2%); }
+  60% { transform: translate(-1%, 2%); }
+  80% { transform: translate(2%, 1%); }
+  100% { transform: translate(0, 0); }
 }

@@ -1,8 +1,9 @@
 <template>
-  <div class="min-h-screen bg-[#f7f7f7] text-black font-sans relative overflow-x-hidden">
+  <div class="grain min-h-screen bg-ink text-zinc-300 relative overflow-x-hidden">
     <LayoutNavbar />
-    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <main>
       <slot />
     </main>
+    <LayoutFooter />
   </div>
 </template>
