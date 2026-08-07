@@ -112,12 +112,44 @@
         <UIcon name="i-heroicons-arrow-right-20-solid" class="w-5 h-5 text-white" />
       </NuxtLink>
     </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="relative w-full min-h-screen bg-[#f7f7f7] flex flex-col items-center pt-32 pb-32 z-20 overflow-hidden">
+      <!-- Section Title -->
+      <div class="reveal-on-scroll reveal-fade-up flex flex-col items-center text-center px-6">
+        <h2 class="text-4xl md:text-5xl font-normal text-black tracking-tight" style="font-family: 'JetBrains Mono ExtraBold', monospace;">
+          FEATURED PROJECTS
+        </h2>
+        <p class="mt-4 text-gray-500 text-lg max-w-2xl" style="font-family: 'JetBrains Mono Regular', monospace;">
+          Explore the amazing tools, apps, and libraries built by our community members.
+        </p>
+      </div>
+
+      <!-- CoverFlow Container -->
+      <div id="projects-container" class="w-full -mt-8 md:-mt-12 relative h-[800px]">
+        <CommonCoverFlow :items="projects" :is-revealed="projectsRevealed" :initial-index="3" />
+        
+        <!-- Bottom Controls -->
+        <div class="absolute -bottom-4 md:-bottom-8 left-0 right-0 flex flex-col items-center gap-6 pointer-events-none transition-opacity duration-1000 z-50" :class="projectsRevealed ? 'opacity-100' : 'opacity-0'">
+          <!-- Navigation Hints -->
+          <p class="text-black/50 text-xs md:text-sm tracking-[0.2em] uppercase" style="font-family: 'JetBrains Mono Light', monospace;">
+            Drag <span class="mx-3 opacity-30">|</span> Horizontal Scroll <span class="mx-3 opacity-30">|</span> Keyboard
+          </p>
+          
+          <!-- CTA Button -->
+          <NuxtLink to="/projects" class="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-black text-white font-normal text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300" style="font-family: 'JetBrains Mono ExtraBold', monospace;">
+            VIEW PROJECTS
+            <UIcon name="i-heroicons-arrow-right-20-solid" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
     
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 import mod1 from '~/assets/images/pfp/mod1.png'
 import mod2 from '~/assets/images/pfp/mod2.png'
@@ -129,25 +161,82 @@ const moderators = [
   { name: 'Divyansh', pfp: mod3 }
 ]
 
+const projects = [
+  {
+    title: 'Test 1',
+    description: 'Test built by community',
+    tech: ['TypeScript', 'Node.js', 'Discord.js'],
+    color: 'bg-gradient-to-b from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 2',
+    description: 'Test built by community',
+    tech: ['Vue', 'Tailwind', 'Vite'],
+    color: 'bg-gradient-to-t from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 3',
+    description: 'Test built by community',
+    tech: ['Rust', 'Tauri', 'React'],
+    color: 'bg-gradient-to-b from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 4',
+    description: 'Test built by community',
+    tech: ['JavaScript', 'Canvas', 'CSS'],
+    color: 'bg-gradient-to-t from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 5',
+    description: 'Test built by community',
+    tech: ['Go', 'Cobra', 'Docker'],
+    color: 'bg-gradient-to-b from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 6',
+    description: 'Test built by community',
+    tech: ['Vue', 'D3.js', 'PostgreSQL'],
+    color: 'bg-gradient-to-t from-white to-black',
+    link: '#'
+  },
+  {
+    title: 'Test 7',
+    description: 'Test built by community',
+    tech: ['C++', 'Qt', 'WebRTC'],
+    color: 'bg-gradient-to-b from-white to-black',
+    link: '#'
+  }
+]
+
 useHead({
   title: 'Home | NEXT-GEN Programmers'
 })
 
 const scrollY = ref(0)
+const bgScale = ref(1)
+const revealObserver = ref()
+const projectsRevealed = ref(false)
+const projectObserver = ref()
 
 const handleScroll = () => {
   scrollY.value = window.scrollY
+  bgScale.value = 1 + (Math.min(scrollY.value / 1000, 1) * 0.25)
 }
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
 
   // Intersection Observer for triggering scroll-reveal animations
-  const revealObserver = new IntersectionObserver((entries) => {
+  revealObserver.value = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('revealed')
-        revealObserver.unobserve(entry.target)
+        revealObserver.value?.unobserve(entry.target)
       }
     })
   }, {
@@ -157,21 +246,32 @@ onMounted(() => {
   })
 
   // Start observing all reveal elements
-  document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
-    revealObserver.observe(el)
-  })
+  setTimeout(() => {
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+      revealObserver.value?.observe(el)
+    })
+  }, 100)
+
+  setTimeout(() => {
+    const carousel = document.getElementById('projects-container')
+    if (carousel) {
+      projectObserver.value = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            projectsRevealed.value = true
+            projectObserver.value?.unobserve(entry.target)
+          }
+        })
+      }, { threshold: 0.3 })
+      projectObserver.value.observe(carousel)
+    }
+  }, 200)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-})
-
-const bgScale = computed(() => {
-  // Zooms from 1.0 to 1.25
-  const maxScroll = 1000
-  const maxScale = 0.25 
-  const progress = Math.min(scrollY.value / maxScroll, 1)
-  return 1 + (progress * maxScale)
+  if (revealObserver.value) revealObserver.value.disconnect()
+  if (projectObserver.value) projectObserver.value.disconnect()
 })
 </script>
 
@@ -188,6 +288,22 @@ html {
   src: url('~/assets/fonts/JetBrainsMono-ExtraBold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+@font-face {
+  font-family: 'JetBrains Mono Light';
+  src: url('~/assets/fonts/JetBrainsMono-Light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 @font-face {
   font-family: 'JetBrains Mono SemiBold Italic';
