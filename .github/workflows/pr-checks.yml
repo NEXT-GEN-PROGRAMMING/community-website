@@ -22,13 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR title follows Conventional Commits
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
         run: |
-          TITLE="${{ github.event.pull_request.title }}"
 
           # Conventional Commits pattern:
           #   type(scope): description
           #   type: description
-          PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|revert)(\((client|server|db|docker|deps|config)\))?: .{3,}"
+          PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|revert)(\((client|server|db|docker|deps|config)\))?: .{3,}$"
 
           if [[ ! "$TITLE" =~ $PATTERN ]]; then
             echo "[!!!] PR title does not follow Conventional Commits format."
